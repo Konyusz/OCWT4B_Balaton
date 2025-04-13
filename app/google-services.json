@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "253388193923",
+    "project_id": "ocwt4bbalaton",
+    "storage_bucket": "ocwt4bbalaton.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253388193923:android:4965a5b7d097ff981bdbb6",
+        "android_client_info": {
+          "package_name": "com.example.ocwt4b_balataon_latnivalok"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt9COr2mOYjDCII4xApYztgl999L4l3-s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
