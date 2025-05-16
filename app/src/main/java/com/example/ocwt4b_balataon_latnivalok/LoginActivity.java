@@ -15,8 +15,25 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailEditText, passwordEditText;
     private Button loginButton, registerButton;
-
     private FirebaseAuth auth;
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(
+                R.anim.no_anim,
+                R.anim.slide_out_bottom
+        );
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(
+                R.anim.no_anim,
+                R.anim.slide_out_bottom
+        );
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,33 +42,39 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        emailEditText = findViewById(R.id.editTextEmail);
+        emailEditText    = findViewById(R.id.editTextEmail);
         passwordEditText = findViewById(R.id.editTextPassword);
-        loginButton = findViewById(R.id.buttonLogin);
-        registerButton = findViewById(R.id.buttonRegister);
+        loginButton      = findViewById(R.id.buttonLogin);
+        registerButton   = findViewById(R.id.buttonRegister);
 
-        loginButton.setOnClickListener(v -> bejelentkezes());
-        registerButton.setOnClickListener(v -> regisztracio());
-    }
+        loginButton.setOnClickListener(v -> {
+            String email = emailEditText.getText().toString().trim();
+            String jelszo = passwordEditText.getText().toString().trim();
 
-    private void bejelentkezes() {
-        String email = emailEditText.getText().toString();
-        String jelszo = passwordEditText.getText().toString();
+            if (email.isEmpty() || jelszo.isEmpty()) {
+                Toast.makeText(this, "Kérem töltsd ki az összes mezőt", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        auth.signInWithEmailAndPassword(email, jelszo)
-                .addOnSuccessListener(authResult -> {
-                    startActivity(new Intent(this, MainActivity.class));
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Sikertelen bejelentkezés: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
+            auth.signInWithEmailAndPassword(email, jelszo)
+                    .addOnSuccessListener(authResult -> {
+                        startActivity(new Intent(this, MainActivity.class));
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this,
+                                "Sikertelen bejelentkezés: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    });
+        });
 
-    private void regisztracio() {
         registerButton.setOnClickListener(v -> {
-            startActivity(new Intent(this, RegisterActivity.class));
-            finish();
+            Intent intent = new Intent(this, RegisterActivity.class);
+            startActivity(intent);
+            overridePendingTransition(
+                    R.anim.slide_in_bottom,
+                    R.anim.no_anim
+            );
         });
     }
 }

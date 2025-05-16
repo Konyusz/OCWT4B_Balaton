@@ -3,6 +3,8 @@ package com.example.ocwt4b_balataon_latnivalok;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.AbstractCollection;
 import java.util.List;
 
 public class LatvanyossagAdapter extends RecyclerView.Adapter<LatvanyossagAdapter.LatvanyossagViewHolder> {
@@ -19,6 +22,12 @@ public class LatvanyossagAdapter extends RecyclerView.Adapter<LatvanyossagAdapte
 
     public LatvanyossagAdapter(List<Latvanyossag> lista) {
         this.lista = lista;
+    }
+
+    public void updateList(List<Latvanyossag> ujLista) {
+        this.lista.clear();
+        this.lista.addAll(ujLista);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -37,6 +46,9 @@ public class LatvanyossagAdapter extends RecyclerView.Adapter<LatvanyossagAdapte
         Glide.with(holder.itemView.getContext())
                 .load(l.getKepUrl())
                 .into(holder.kepImage);
+
+        Animation fadeIn = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.fade_in);
+        holder.itemView.startAnimation(fadeIn);
     }
 
     @Override
@@ -44,7 +56,9 @@ public class LatvanyossagAdapter extends RecyclerView.Adapter<LatvanyossagAdapte
         return lista.size();
     }
 
-    static class LatvanyossagViewHolder extends RecyclerView.ViewHolder {
+    class LatvanyossagViewHolder extends RecyclerView.ViewHolder {
+
+        private List<Latvanyossag> items;
         TextView nevText, leirasText;
         ImageView kepImage;
 
@@ -54,5 +68,7 @@ public class LatvanyossagAdapter extends RecyclerView.Adapter<LatvanyossagAdapte
             leirasText = itemView.findViewById(R.id.textViewLeiras);
             kepImage = itemView.findViewById(R.id.imageView);
         }
+
+
     }
 }

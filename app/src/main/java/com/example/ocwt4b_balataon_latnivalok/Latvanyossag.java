@@ -1,5 +1,15 @@
 package com.example.ocwt4b_balataon_latnivalok;
 
+import android.util.Log;
+
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Latvanyossag {
     private String id; // Firestore dokumentum azonosítója
     private String nev;
@@ -67,5 +77,71 @@ public class Latvanyossag {
 
     public void setLng(double lng) {
         this.lng = lng;
+    }
+
+    private void addLatvanyossag(Latvanyossag l) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("latvanyossagok")
+                .document(l.getId())
+                .set(l)
+                .addOnSuccessListener(aVoid ->
+                        Log.d("CRUD", "Létrehozva: " + l.getId()))
+                .addOnFailureListener(e ->
+                        Log.e("CRUD", "Hiba a létrehozáskor", e));
+    }
+
+    private void getAllLatvanyossagok() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("latvanyossagok")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<Latvanyossag> lista = new ArrayList<>();
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Latvanyossag l = doc.toObject(Latvanyossag.class);
+                        lista.add(l);
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Log.e("CRUD", "Hiba a lekérdezéskor", e));
+    }
+
+    private void getLatvanyossagById(String id) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("latvanyossagok")
+                .document(id)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        Latvanyossag l = doc.toObject(Latvanyossag.class);
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Log.e("CRUD", "Hiba a dokumentum lekérésekor", e));
+    }
+
+    private void updateLatvanyossag(Latvanyossag l) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> changes = new HashMap<>();
+        changes.put("leiras", l.getLeiras());
+        changes.put("kepUrl", l.getKepUrl());
+        // bővítheted más mezőkkel is...
+
+        db.collection("latvanyossagok")
+                .document(l.getId())
+                .update(changes)
+                .addOnSuccessListener(aVoid ->
+                        Log.d("CRUD", "Frissítve: " + l.getId()))
+                .addOnFailureListener(e ->
+                        Log.e("CRUD", "Hiba a frissítéskor", e));
+    }
+    private void deleteLatvanyossag(String id) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("latvanyossagok")
+                .document(id)
+                .delete()
+                .addOnSuccessListener(aVoid ->
+                        Log.d("CRUD", "Törölve: " + id))
+                .addOnFailureListener(e ->
+                        Log.e("CRUD", "Hiba a törléskor", e));
     }
 }
